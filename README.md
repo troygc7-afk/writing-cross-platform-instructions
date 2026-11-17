@@ -1,2 +1,104 @@
 # writing-cross-platform-instructions
-R1–R8 rules for writing instructions to another AI or platform: verify the target, confirm preconditions, deliver long text as files, and demand independently checkable evidence. Open for multi-AI collaboration.
+
+**R1–R8：把指令交給另一個 AI 或另一個平台之前，必須先過的八道檢查。**
+
+這個 repo 是一份**可協作的規則集**，不是程式庫。目標是讓不同 AI（Copilot、Claude、Gemini、Codex、其他 Agent）在「寫指令給別的 AI」這件事上，共用同一套可驗證的標準。
+
+---
+
+## 為什麼需要這份規則
+
+三次跨平台 Skill 轉移測試，三次失敗，失敗原因全部不是「技術做不到」，而是**指令本身寫錯**：
+
+| 失敗 | 根因 | 對應規則 |
+|---|---|---|
+| Copilot 回 `NOT_INSTALLED` | 指令驗的是打包工具，不是被轉移的 Skill | R3 |
+| Copilot 說「未收到傳輸包」 | 傳輸包貼在 A 對話、指令貼在 B 對話 | R1、R2 |
+| 使用者「看不出哪一段要貼」 | 82 行指令塞在收合區塊裡 | R5、R6 |
+| 第一次宣稱 PASS 卻無證據 | 只收結論、不收可複核產出物 | R8 |
+
+**共同病根：把「我以為的狀況」當成事實寫進指令。**
+
+---
+
+## 八條規則
+
+| # | 規則 | 一句話 |
+|---|---|---|
+| **R1** | 先確認對方手上有什麼 | 不要假設它已經收到了 |
+| **R2** | 驗收指令自帶 Step 0 | 沒收到就停止，不要猜測補足 |
+| **R3** | 對象名稱明寫並排除鄰近混淆 | 工具 ≠ 產物 |
+| **R4** | 禁止驗證沒收到的東西 | 每個「請驗證」都要有來源 |
+| **R5** | 一則訊息只服務一個讀者 | 操作指示／指令本體／判讀重點要拆開 |
+| **R6** | 長文用檔案交付 | 超過 20 行不要塞收合區塊 |
+| **R7** | 消除風險，不要只警告 | 「請小心」不等於解決方案 |
+| **R8** | 要求可複核證據 | PASS 是結論，不是證據 |
+
+完整條文（含「為什麼」「違反判定」）見 [`references/rules-r1-r8.txt`](references/rules-r1-r8.txt)。
+
+---
+
+## 檔案結構
+
+```
+writing-cross-platform-instructions/
+├── SKILL.md                        # Skill 主體（觸發條件／步驟／失效條件／驗證方式）
+├── references/
+│   └── rules-r1-r8.txt             # R1–R8 完整條文，可直接貼進 Agent Instructions
+├── README.md                       # 本檔
+└── CONTRIBUTING.md                 # 協作規則
+```
+
+---
+
+## 怎麼用
+
+### 用法一：當 Skill 用
+
+把整個目錄放進你的 agent skills 路徑，或依你的平台格式註冊。觸發語包含：
+
+> 「寫一份指令給 Copilot」「貼給另一個 AI」「跨平台指令」「驗收指令」「指令被截斷」「對方說沒收到」「亂出指令」
+
+### 用法二：當 Agent Instructions 條文用
+
+直接複製 `references/rules-r1-r8.txt` 全文，貼進你的 Agent Instructions 的「指令撰寫」章節。
+
+### 用法三：當檢查清單用
+
+送出任何跨平台指令前，跑一次文末的八項自檢。
+
+---
+
+## 送出前自檢清單
+
+```
+[ ] R1 已確認對方手上有什麼，或已在指令中寫明假設與停止條件
+[ ] R2 指令第一段是前置條件檢查，含「未收到則停止」分支
+[ ] R3 對象名稱已明寫，且已排除鄰近混淆名稱
+[ ] R4 每個「請驗證」的對象都可追溯來源
+[ ] R5 一則訊息只有一個讀者
+[ ] R6 超過 20 行的可複製內容已改為檔案交付
+[ ] R7 沒有用警告代替解決方案
+[ ] R8 已列出可複核證據清單與 UNVERIFIED 鐵則
+```
+
+**八項全勾才可送出。任一未勾 → 修正後重跑。**
+
+---
+
+## 核心判準
+
+拿到對方回覆後，用這句話自問：
+
+> **「如果我不相信它說的任何一句話，光看它給的證據，我能自己重現這個結論嗎？」**
+
+- 能 → 驗收成立
+- 不能 → 不論它寫 PASS 還是什麼，都是 UNVERIFIED
+
+---
+
+## 授權
+
+MIT。歡迎 fork、開 issue、送 PR。
+
+協作規則見 [CONTRIBUTING.md](CONTRIBUTING.md)。
